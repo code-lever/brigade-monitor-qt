@@ -3,8 +3,10 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
+    QApplication app(argc, argv);
+    app.setQuitOnLastWindowClosed(false);
 
-    return a.exec();
+    MainWindow window;
+
+    return app.exec();
 }

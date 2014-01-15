@@ -126,8 +126,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>removeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>removeSelectedRow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>363</x>
+     <y>261</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>200</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>addRow()</slot>
+  <slot>removeSelectedRow()</slot>
  </slots>
 </ui>

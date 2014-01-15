@@ -17,6 +17,7 @@ public:
 
 private slots:
     void addRow();
+    void removeSelectedRow();
 
 private:
     Ui::MainWindow *ui;

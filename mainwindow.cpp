@@ -12,3 +12,9 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::addRow()
+{
+    int row = ui->tableWidget->rowCount();
+    ui->tableWidget->insertRow(row);
+}

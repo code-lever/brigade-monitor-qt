@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QMenu>
 #include <QSystemTrayIcon>
+#include <QTableWidgetItem>
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +22,8 @@ private slots:
     void addRow();
     void removeSelectedRow();
     void toggleRunning();
+    void tableItemsChanged(QTableWidgetItem*);
+    void keyTextEdited();
 
 private:
     Ui::MainWindow *ui;
@@ -29,6 +32,9 @@ private:
     QSystemTrayIcon* trayIcon;
 
     void createTrayIcon();
+    void restoreApiKey();
+    void restoreMonitoredHosts();
+    void storeMonitoredHosts();
 };
 
 #endif // MAINWINDOW_H

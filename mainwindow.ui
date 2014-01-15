@@ -36,6 +36,9 @@
       <height>21</height>
      </rect>
     </property>
+    <property name="placeholderText">
+     <string>See your user profile on brigade.io</string>
+    </property>
    </widget>
    <widget class="QGroupBox" name="hostsGroup">
     <property name="geometry">
@@ -83,6 +86,12 @@
        <width>361</width>
        <height>171</height>
       </rect>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
      </property>
      <property name="showGrid">
       <bool>true</bool>
@@ -146,5 +155,6 @@
  <slots>
   <slot>addRow()</slot>
   <slot>removeSelectedRow()</slot>
+  <slot>tableItemsChanged(QTableWidgetItem*)</slot>
  </slots>
 </ui>

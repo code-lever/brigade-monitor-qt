@@ -12,6 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     createTrayIcon();
     trayIcon->show();
+
+    restoreApiKey();
+    connect(ui->keyText, SIGNAL(editingFinished()), this, SLOT(keyTextEdited()));
+
+    restoreMonitoredHosts();
+    connect(ui->tableWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(tableItemsChanged(QTableWidgetItem*)));
 }
 
 MainWindow::~MainWindow()
@@ -44,14 +50,64 @@ void MainWindow::createTrayIcon()
     trayIcon->setContextMenu(trayIconMenu);
 }
 
+void MainWindow::restoreApiKey()
+{
+    Q_ASSERT(ui->keyText);
+
+    QSettings settings;
+    ui->keyText->setText(settings.value("api-key").toString());
+}
+
+void MainWindow::restoreMonitoredHosts()
+{
+    Q_ASSERT(ui->tableWidget);
+
+    QSettings settings;
+    int size = settings.beginReadArray("monitored-hosts");
+    ui->tableWidget->setRowCount(size);
+    for (int i = 0; i < size; ++i) {
+        settings.setArrayIndex(i);
+        QString host = settings.value("host").toString();
+        QString port = settings.value("port").toString();
+        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(host));
+        ui->tableWidget->setItem(i, 1, new QTableWidgetItem(port));
+    }
+    settings.endArray();
+}
+
+void MainWindow::storeMonitoredHosts()
+{
+    Q_ASSERT(ui->tableWidget);
+
+    QSettings settings;
+    settings.remove("monitored-hosts");
+    settings.beginWriteArray("monitored-hosts");
+
+    int rows = ui->tableWidget->rowCount();
+    for (int row = 0; row < rows; ++row)
+    {
+        QTableWidgetItem *hostItem = ui->tableWidget->item(row, 0);
+        QTableWidgetItem *portItem = ui->tableWidget->item(row, 1);
+
+        settings.setArrayIndex(row);
+        if (hostItem) { settings.setValue("host", hostItem->text()); }
+        if (portItem) { settings.setValue("port", portItem->text()); }
+    }
+    settings.endArray();
+}
+
 void MainWindow::addRow()
 {
+    Q_ASSERT(ui->tableWidget);
+
     int row = ui->tableWidget->rowCount();
     ui->tableWidget->insertRow(row);
 }
 
 void MainWindow::removeSelectedRow()
 {
+    Q_ASSERT(ui->tableWidget);
+
     QItemSelectionModel* model = ui->tableWidget->selectionModel();
     Q_ASSERT(model);
 
@@ -59,7 +115,13 @@ void MainWindow::removeSelectedRow()
     {
         int row = model->currentIndex().row();
         ui->tableWidget->removeRow(row);
+        storeMonitoredHosts();
     }
+}
+
+void MainWindow::tableItemsChanged(QTableWidgetItem*)
+{
+    storeMonitoredHosts();
 }
 
 void MainWindow::toggleRunning()
@@ -69,4 +131,14 @@ void MainWindow::toggleRunning()
 
     QSettings settings;
     settings.setValue("running", startStopAction->isChecked());
+}
+
+void MainWindow::keyTextEdited()
+{
+    Q_ASSERT(ui->keyText);
+
+    ui->keyText->setText(ui->keyText->text().trimmed());
+
+    QSettings settings;
+    settings.setValue("api-key", ui->keyText->text());
 }

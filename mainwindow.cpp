@@ -23,12 +23,12 @@ void MainWindow::createTrayIcon()
 {
     QSettings settings;
 
-    startStopAction = new QAction(tr("Start Monitoring"), this);
+    startStopAction = new QAction(tr("&Start Monitoring"), this);
     startStopAction->setCheckable(true);
     startStopAction->setChecked(settings.value("running", false).toBool());
     connect(startStopAction, SIGNAL(triggered()), this, SLOT(toggleRunning()));
 
-    QAction *showAction = new QAction(tr("Edit Settings"), this);
+    QAction *showAction = new QAction(tr("&Edit Settings"), this);
     connect(showAction, SIGNAL(triggered()), this, SLOT(show()));
 
     QAction *exitAction = new QAction(tr("&Quit"), this);

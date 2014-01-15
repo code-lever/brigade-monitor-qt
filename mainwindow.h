@@ -20,10 +20,12 @@ public:
 private slots:
     void addRow();
     void removeSelectedRow();
+    void toggleRunning();
 
 private:
     Ui::MainWindow *ui;
     QMenu* trayIconMenu;
+    QAction *startStopAction;
     QSystemTrayIcon* trayIcon;
 
     void createTrayIcon();

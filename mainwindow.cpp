@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QDebug>
+#include <QSettings>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -14,6 +17,31 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::createTrayIcon()
+{
+    QSettings settings;
+
+    startStopAction = new QAction(tr("Start Monitoring"), this);
+    startStopAction->setCheckable(true);
+    startStopAction->setChecked(settings.value("running", false).toBool());
+    connect(startStopAction, SIGNAL(triggered()), this, SLOT(toggleRunning()));
+
+    QAction *showAction = new QAction(tr("Edit Settings"), this);
+    connect(showAction, SIGNAL(triggered()), this, SLOT(show()));
+
+    QAction *exitAction = new QAction(tr("&Quit"), this);
+    connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(startStopAction);
+    trayIconMenu->addAction(showAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(exitAction);
+
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setContextMenu(trayIconMenu);
 }
 
 void MainWindow::addRow()
@@ -34,14 +62,11 @@ void MainWindow::removeSelectedRow()
     }
 }
 
-void MainWindow::createTrayIcon()
+void MainWindow::toggleRunning()
 {
-    trayIconMenu = new QMenu(this);
-    trayIconMenu->addAction("Start Monitoring");
-    trayIconMenu->addAction("Edit Settings");
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction("Exit");
+    Q_ASSERT(startStopAction);
+    startStopAction->setChecked(startStopAction->isChecked());
 
-    trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setContextMenu(trayIconMenu);
+    QSettings settings;
+    settings.setValue("running", startStopAction->isChecked());
 }

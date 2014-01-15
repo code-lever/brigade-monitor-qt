@@ -6,6 +6,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    createTrayIcon();
+    trayIcon->show();
 }
 
 MainWindow::~MainWindow()
@@ -29,4 +32,16 @@ void MainWindow::removeSelectedRow()
         int row = model->currentIndex().row();
         ui->tableWidget->removeRow(row);
     }
+}
+
+void MainWindow::createTrayIcon()
+{
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction("Start Monitoring");
+    trayIconMenu->addAction("Edit Settings");
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction("Exit");
+
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setContextMenu(trayIconMenu);
 }

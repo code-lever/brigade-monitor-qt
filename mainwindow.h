@@ -5,6 +5,7 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 #include <QTableWidgetItem>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -24,13 +25,16 @@ private slots:
     void toggleRunning();
     void tableItemsChanged(QTableWidgetItem*);
     void keyTextEdited();
+    void doUpdate();
 
 private:
     Ui::MainWindow *ui;
-    QMenu* trayIconMenu;
+    QMenu *trayIconMenu;
     QAction *startStopAction;
-    QSystemTrayIcon* trayIcon;
+    QSystemTrayIcon *trayIcon;
+    QTimer *timer;
 
+    bool isRunning();
     void createTrayIcon();
     void restoreApiKey();
     void restoreMonitoredHosts();

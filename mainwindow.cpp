@@ -1,12 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "updater.h"
 
 #include <QDebug>
 #include <QSettings>
+#include <QTimer>
+
+#define UPDATE_PERIOD 10000
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    QMainWindow(parent), ui(new Ui::MainWindow), trayIconMenu(0), startStopAction(0), trayIcon(0), timer(0)
 {
     ui->setupUi(this);
     setFixedSize(geometry().width(), geometry().height());
@@ -20,11 +23,25 @@ MainWindow::MainWindow(QWidget *parent) :
 
     restoreMonitoredHosts();
     connect(ui->tableWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(tableItemsChanged(QTableWidgetItem*)));
+
+    timer = new QTimer(this);
+    timer->setSingleShot(true);
+    connect(timer, SIGNAL(timeout()), this, SLOT(doUpdate()));
+
+    if (isRunning())
+    {
+        timer->start(UPDATE_PERIOD);
+    }
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+bool MainWindow::isRunning()
+{
+    return startStopAction && startStopAction->isChecked();
 }
 
 void MainWindow::createTrayIcon()
@@ -96,9 +113,9 @@ void MainWindow::storeMonitoredHosts()
         QTableWidgetItem *portItem = ui->tableWidget->item(row, 2);
 
         settings.setArrayIndex(row);
-        if (nameItem) { settings.setValue("name", nameItem->text()); }
-        if (hostItem) { settings.setValue("host", hostItem->text()); }
-        if (portItem) { settings.setValue("port", portItem->text()); }
+        if (nameItem) { settings.setValue("name", nameItem->text().trimmed()); }
+        if (hostItem) { settings.setValue("host", hostItem->text().trimmed()); }
+        if (portItem) { settings.setValue("port", portItem->text().trimmed()); }
     }
     settings.endArray();
 }
@@ -133,11 +150,17 @@ void MainWindow::tableItemsChanged(QTableWidgetItem*)
 
 void MainWindow::toggleRunning()
 {
-    Q_ASSERT(startStopAction);
-    startStopAction->setChecked(startStopAction->isChecked());
-
     QSettings settings;
-    settings.setValue("running", startStopAction->isChecked());
+    settings.setValue("running", isRunning());
+
+    if (isRunning())
+    {
+        timer->start(5000);
+    }
+    else
+    {
+        timer->stop();
+    }
 }
 
 void MainWindow::keyTextEdited()
@@ -148,4 +171,13 @@ void MainWindow::keyTextEdited()
 
     QSettings settings;
     settings.setValue("api-key", ui->keyText->text());
+}
+
+void MainWindow::doUpdate()
+{
+    Updater::update();
+    if (isRunning())
+    {
+        timer->start(UPDATE_PERIOD);
+    }
 }

@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    cgminerapi.cpp
+    cgminerapi.cpp \
+updater.cpp
 
 HEADERS  += mainwindow.h \
-    cgminerapi.h
+    cgminerapi.h \
+updater.h
 
 FORMS    += mainwindow.ui
 

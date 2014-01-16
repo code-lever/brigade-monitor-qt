@@ -1,5 +1,6 @@
 #include "updater.h"
 #include "cgminerapi.h"
+#include "qtsysteminfo.h"
 
 #include <QSettings>
 
@@ -12,6 +13,8 @@ struct HostInformation
 
 void Updater::update()
 {
+    static QtSystemInfo systemInfo;
+
     qDebug() << "Updater::update()";
 
     QList<HostInformation> hosts;
@@ -57,11 +60,22 @@ void Updater::update()
             QJsonDocument devs = api.devs();
             QJsonDocument pools = api.pools();
 
-            qDebug() << "host   : " << info.host;
-            qDebug() << "version: " << version;
-            qDebug() << "summary: " << summary;
-            qDebug() << "devs   : " << devs;
-            qDebug() << "pools  : " << pools;
+            QJsonObject vobj = version.object();
+            QJsonObject vobj2 = vobj["VERSION"].toArray()[0].toObject();
+
+            QJsonObject update;
+            update["host"] = info.name;
+            update["uptime"] = summary.object()["SUMMARY"].toArray()[0].toObject()["Elapsed"];
+            update["mhash"] = summary.object()["SUMMARY"].toArray()[0].toObject()["MHS av"];
+            update["rejectpct"] = summary.object()["SUMMARY"].toArray()[0].toObject()["Pool Rejected%"];
+
+            QJsonObject agent;
+            agent["name"] = QString("brigade-monitor-qt");
+            agent["platform"] = systemInfo.getSystemInformation();
+            agent["version"] = QString(stringify(APP_VERSION));
+            update["agent"] = agent;
+
+            qDebug() << "update: " << update;
         }
         catch (std::exception& e)
         {

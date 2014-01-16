@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     cgminerapi.cpp \
-updater.cpp
+updater.cpp \
+    qtsysteminfo.cpp
 
 HEADERS  += mainwindow.h \
     cgminerapi.h \
-updater.h
+updater.h \
+    qtsysteminfo.h
 
 FORMS    += mainwindow.ui
 

@@ -13,9 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    cgminerapi.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    cgminerapi.h
 
 FORMS    += mainwindow.ui
 

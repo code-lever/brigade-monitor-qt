@@ -97,11 +97,16 @@
       <bool>true</bool>
      </property>
      <property name="columnCount">
-      <number>2</number>
+      <number>3</number>
      </property>
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
      </attribute>
+     <column>
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </column>
      <column>
       <property name="text">
        <string>Hostname</string>

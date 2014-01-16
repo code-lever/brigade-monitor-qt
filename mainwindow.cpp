@@ -70,10 +70,12 @@ void MainWindow::restoreMonitoredHosts()
     ui->tableWidget->setRowCount(size);
     for (int i = 0; i < size; ++i) {
         settings.setArrayIndex(i);
+        QString name = settings.value("name").toString();
         QString host = settings.value("host").toString();
         QString port = settings.value("port").toString();
-        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(host));
-        ui->tableWidget->setItem(i, 1, new QTableWidgetItem(port));
+        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(name));
+        ui->tableWidget->setItem(i, 1, new QTableWidgetItem(host));
+        ui->tableWidget->setItem(i, 2, new QTableWidgetItem(port));
     }
     settings.endArray();
 }
@@ -89,10 +91,12 @@ void MainWindow::storeMonitoredHosts()
     int rows = ui->tableWidget->rowCount();
     for (int row = 0; row < rows; ++row)
     {
-        QTableWidgetItem *hostItem = ui->tableWidget->item(row, 0);
-        QTableWidgetItem *portItem = ui->tableWidget->item(row, 1);
+        QTableWidgetItem *nameItem = ui->tableWidget->item(row, 0);
+        QTableWidgetItem *hostItem = ui->tableWidget->item(row, 1);
+        QTableWidgetItem *portItem = ui->tableWidget->item(row, 2);
 
         settings.setArrayIndex(row);
+        if (nameItem) { settings.setValue("name", nameItem->text()); }
         if (hostItem) { settings.setValue("host", hostItem->text()); }
         if (portItem) { settings.setValue("port", portItem->text()); }
     }

@@ -48,6 +48,7 @@ void MainWindow::createTrayIcon()
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
+    trayIcon->setIcon(QIcon(":/images/icon.png"));
 }
 
 void MainWindow::restoreApiKey()

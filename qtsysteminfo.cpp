@@ -141,6 +141,12 @@ public:
             return "10.5";
         case QSysInfo::MV_10_6:
             return "10.6";
+        case QSysInfo::MV_10_7:
+            return "10.7";
+        case QSysInfo::MV_10_8:
+            return "10.8";
+        case QSysInfo::MV_10_9:
+            return "10.9";
         default:
             return UNKNOWN;
         }
@@ -512,6 +518,10 @@ public:
             return "Vista / Server 2008";
         case QSysInfo::WV_WINDOWS7:
             return "7 / Server 2008 R2";
+        case QSysInfo::WV_WINDOWS8:
+            return "8 / Server 2012";
+        case QSysInfo::WV_WINDOWS8_1:
+            return "8.1 / Server 2012 R2";
         default:
             return UNKNOWN;
         }

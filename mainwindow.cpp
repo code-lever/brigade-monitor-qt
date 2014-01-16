@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setFixedSize(geometry().width(), geometry().height());
 
     createTrayIcon();
     trayIcon->show();

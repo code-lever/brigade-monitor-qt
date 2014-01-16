@@ -2,13 +2,12 @@
 #include "cgminerapi.h"
 
 #include <QSettings>
-#include <QtNetwork>
 
 struct HostInformation
 {
     QString name;
     QString host;
-    short port;
+    quint16 port;
 };
 
 void Updater::update()
@@ -32,7 +31,7 @@ void Updater::update()
         }
 
         bool ok = true;
-        HostInformation info = { name, host, port.toShort(&ok) };
+        HostInformation info = { name, host, port.toUShort(&ok) };
 
         if (ok)
         {
@@ -47,4 +46,26 @@ void Updater::update()
     settings.endArray();
 
     qDebug() << "Built host list, " << hosts.length() << " entries";
+
+    Q_FOREACH(HostInformation info, hosts)
+    {
+        try
+        {
+            CGMinerAPI api(info.host, info.port);
+            QJsonDocument version = api.version();
+            QJsonDocument summary = api.summary();
+            QJsonDocument devs = api.devs();
+            QJsonDocument pools = api.pools();
+
+            qDebug() << "host   : " << info.host;
+            qDebug() << "version: " << version;
+            qDebug() << "summary: " << summary;
+            qDebug() << "devs   : " << devs;
+            qDebug() << "pools  : " << pools;
+        }
+        catch (std::exception& e)
+        {
+            // XXX bark
+        }
+    }
 }

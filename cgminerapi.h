@@ -6,12 +6,19 @@
 class CGMinerAPI
 {
 public:
-    CGMinerAPI(const QHostAddress& host, short port);
+    CGMinerAPI(const QString& host, quint16 port);
     virtual ~CGMinerAPI();
 
+    QJsonDocument devs();
+    QJsonDocument pools();
+    QJsonDocument summary();
+    QJsonDocument version();
+
 private:
-    QHostAddress host;
-    short port;
+    QString host;
+    quint16 port;
+
+    QJsonDocument command(const QString& name, const QString& param = "");
 };
 
 #endif // CGMINERAPI_H

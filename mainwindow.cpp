@@ -6,14 +6,18 @@
 #include <QSettings>
 #include <QTimer>
 
-#define UPDATE_PERIOD 10000
+#define UPDATE_PERIOD 60000
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow), trayIconMenu(0), startStopAction(0), trayIcon(0), timer(0)
+    QMainWindow(parent), ui(new Ui::MainWindow), trayIconMenu(0), startStopAction(0),
+    trayIcon(0), timer(0), nam()
 {
     ui->setupUi(this);
     setFixedSize(geometry().width(), geometry().height());
     setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
+
+    connect(&nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(updateFinished(QNetworkReply*)));
+    connect(&nam, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(sslErrors(QNetworkReply*,QList<QSslError>)));
 
     createTrayIcon();
     trayIcon->show();
@@ -175,10 +179,59 @@ void MainWindow::keyTextEdited()
 
 void MainWindow::doUpdate()
 {
-    Updater updater;
-    updater.update();
+    QString token;
+
+    {
+        QSettings settings;
+        token = settings.value("api-key").toString();
+
+        if (token.isEmpty())
+        {
+            qDebug() << "Token empty, skipping update...";
+            return;
+        }
+    }
+
+    try
+    {
+        QJsonDocument updates = Updater(this).update();
+
+#if defined(DEBUG)
+        QUrl url("http://localhost:3000/api/v1/hosts");
+#else
+        QUrl url("https://app.brigade.io/api/v1/hosts");
+#endif
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
+
+        QUrlQuery query;
+        query.addQueryItem("token", token);
+        query.addQueryItem("updates", updates.toJson());
+
+        QByteArray data;
+        data.append(query.query(QUrl::FullyEncoded));
+
+        qDebug() << "About to post" << data.length() << "bytes to" << url;
+        nam.post(request, data);
+    }
+    catch (std::exception& e)
+    {
+        qDebug() << "Exception submitting updates:" << e.what();
+    }
+
     if (isRunning())
     {
         timer->start(UPDATE_PERIOD);
     }
+}
+
+void MainWindow::updateFinished(QNetworkReply* reply)
+{
+    qDebug() << "finished!" << reply;
+}
+
+void MainWindow::sslErrors(QNetworkReply * reply, const QList<QSslError> & errors)
+{
+    qDebug() << "ssl errors:" << errors;
+    reply->ignoreSslErrors(errors);
 }

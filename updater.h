@@ -25,11 +25,10 @@ public:
 
     virtual ~Updater();
 
-    void update();
+    QJsonDocument update();
 
 private:
     QList<HostInformation> hosts;
-    QString token;
     QtSystemInfo systemInfo;
 
     QJsonObject getUpdate(const HostInformation& miner);

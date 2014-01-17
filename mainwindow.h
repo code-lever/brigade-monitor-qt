@@ -6,6 +6,7 @@
 #include <QSystemTrayIcon>
 #include <QTableWidgetItem>
 #include <QTimer>
+#include <QtNetwork>
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +27,8 @@ private slots:
     void tableItemsChanged(QTableWidgetItem*);
     void keyTextEdited();
     void doUpdate();
+    void updateFinished(QNetworkReply*);
+    void sslErrors(QNetworkReply * reply, const QList<QSslError> & errors);
 
 private:
     Ui::MainWindow *ui;
@@ -33,6 +36,7 @@ private:
     QAction *startStopAction;
     QSystemTrayIcon *trayIcon;
     QTimer *timer;
+    QNetworkAccessManager nam;
 
     bool isRunning();
     void createTrayIcon();

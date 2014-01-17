@@ -5,7 +5,8 @@
 
 #include <stdexcept>
 
-Updater::Updater(QObject *parent) : QObject(parent), hosts(), token(), systemInfo(this)
+Updater::Updater(QObject *parent)
+    : QObject(parent), hosts(), systemInfo(this)
 {
     QSettings settings;
     int size = settings.beginReadArray("monitored-hosts");
@@ -34,8 +35,6 @@ Updater::Updater(QObject *parent) : QObject(parent), hosts(), token(), systemInf
         hosts.append(info);
     }
     settings.endArray();
-
-    token = settings.value("api-key").toString();
 }
 
 Updater::~Updater()
@@ -43,18 +42,8 @@ Updater::~Updater()
     /* do nothing */
 }
 
-void Updater::update()
+QJsonDocument Updater::update()
 {
-    qDebug() << "Updater::update()";
-
-    if (token.isEmpty())
-    {
-        qDebug() << "TOKEN EMPTY, skipping update";
-        return;
-    }
-
-    qDebug() << "host list has" << hosts.length() << "entries";
-
     QJsonArray updates;
 
     Q_FOREACH(HostInformation info, hosts)
@@ -69,57 +58,7 @@ void Updater::update()
         }
     }
 
-    if (updates.isEmpty())
-    {
-        qDebug() << "Updates are empty, skipping...";
-        return;
-    }
-
-    try
-    {
-        QUrl url("http://localhost:3000/api/v1/hosts");
-        QNetworkRequest request(url);
-        request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
-
-        QUrlQuery query;
-        query.addQueryItem("token", token);
-        query.addQueryItem("updates", QString(QJsonDocument(updates).toJson()));
-
-        //qDebug() << query.query(QUrl::FullyEncoded);
-        url.setQuery(query);
-
-        QByteArray paramsb;
-
-        qDebug() << "About to post: " << url;
-
-        QNetworkAccessManager nwam(this);
-        QNetworkReply *reply = nwam.post(request, paramsb);
-
-        if (!reply->waitForBytesWritten(5000))
-        {
-            QString message = "Failed to write command (%1)";
-            throw std::runtime_error(message.arg(reply->errorString()).toStdString());
-        }
-
-        /* build up the response until no more data is received */
-        QByteArray response;
-        while (reply->waitForReadyRead(5000))
-        {
-            response.append(reply->readAll());
-
-            if (reply->isFinished())
-            {
-                qDebug() << "Finished!!";
-                break;
-            }
-        }
-
-        qDebug() << response;
-    }
-    catch (std::exception& e)
-    {
-        qDebug() << "Exception submitting updates:" << e.what();
-    }
+    return QJsonDocument(updates);
 }
 
 QJsonObject Updater::getUpdate(const HostInformation& miner)

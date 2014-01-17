@@ -137,7 +137,19 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
     update["asics"] = asics;
     update["fpgas"] = fpgas;
 
-    // XXX pools
+    QJsonArray jpools;
+    Q_FOREACH (QJsonValue value, pools.object()["POOLS"].toArray())
+    {
+        QJsonObject devObj = value.toObject();
+        QJsonObject pool;
+        pool["index"] = devObj["POOL"];
+        pool["url"] = devObj["URL"];
+        pool["status"] = devObj["Status"];
+        pool["active"] = devObj["Stratum Active"];
+        pool["rejectpct"] = devObj["Pool Rejected%"];
+        jpools.append(pool);
+    }
+    update["pools"] = jpools;
 
     // XXX use VERSION information
 

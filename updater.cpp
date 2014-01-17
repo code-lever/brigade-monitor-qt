@@ -151,7 +151,5 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
     }
     update["pools"] = jpools;
 
-    // XXX use VERSION information
-
     return update;
 }

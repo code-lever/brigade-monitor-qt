@@ -37,7 +37,7 @@ QJsonDocument CGMinerAPI::command(const QString& name, const QString& param)
 {
     QTcpSocket socket;
     socket.connectToHost(host, port);
-    if (!socket.waitForConnected())
+    if (!socket.waitForConnected(5000))
     {
         QString message = "Failed to connect (%1)";
         throw std::runtime_error(message.arg(socket.errorString()).toStdString());
@@ -46,7 +46,7 @@ QJsonDocument CGMinerAPI::command(const QString& name, const QString& param)
     QString command("{ \"command\" : \"%1\", \"parameter\" : \"%2\" }");
     QByteArray cmdout;
     socket.write(cmdout.append(command.arg(name).arg(param)));
-    if (!socket.waitForBytesWritten())
+    if (!socket.waitForBytesWritten(5000))
     {
         QString message = "Failed to write command (%1)";
         throw std::runtime_error(message.arg(socket.errorString()).toStdString());

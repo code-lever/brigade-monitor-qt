@@ -175,7 +175,8 @@ void MainWindow::keyTextEdited()
 
 void MainWindow::doUpdate()
 {
-    Updater::update();
+    Updater updater;
+    updater.update();
     if (isRunning())
     {
         timer->start(UPDATE_PERIOD);

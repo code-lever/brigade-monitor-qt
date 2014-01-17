@@ -110,7 +110,22 @@ void Updater::update()
             agent["version"] = QString(stringify(APP_VERSION));
             update["agent"] = agent;
 
-            qDebug() << "update: " << update;
+            QUrl url("http://localhost:3000/api/v1/hosts");
+            QNetworkRequest request(url);
+            request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
+
+            QUrlQuery query;
+            query.addQueryItem("token", token);
+            query.addQueryItem("updates", QString(QJsonDocument(update).toJson()));
+
+            QByteArray paramsb;
+            paramsb.append(query.toString(QUrl::EncodeUnicode));
+
+            qDebug() << "About to post: " << paramsb;
+
+            QNetworkAccessManager nwam;
+            nwam.post(request, paramsb);
+            //qDebug() << "update: " << update;
         }
         catch (std::exception& e)
         {

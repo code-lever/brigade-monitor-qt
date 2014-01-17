@@ -9,6 +9,8 @@ public:
     CGMinerAPI(const QString& host, quint16 port);
     virtual ~CGMinerAPI();
 
+    QJsonDocument config();
+    QJsonDocument devdetails();
     QJsonDocument devs();
     QJsonDocument pools();
     QJsonDocument summary();

@@ -13,6 +13,17 @@ CGMinerAPI::~CGMinerAPI()
 {
     /* do nothing */
 }
+
+QJsonDocument CGMinerAPI::config()
+{
+    return command("config");
+}
+
+QJsonDocument CGMinerAPI::devdetails()
+{
+    return command("devdetails");
+}
+
 QJsonDocument CGMinerAPI::devs()
 {
     return command("devs");

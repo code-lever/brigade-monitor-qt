@@ -11,7 +11,7 @@
 
 class Updater : public QObject
 {
-    //Q_OBJECT
+    Q_OBJECT
 
 public:
     struct HostInformation

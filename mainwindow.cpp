@@ -196,7 +196,7 @@ void MainWindow::doUpdate()
     {
         QJsonDocument updates = Updater(this).update();
 
-#if defined(DEBUG)
+#if 0
         QUrl url("http://localhost:3000/api/v1/hosts");
 #else
         QUrl url("https://app.brigade.io/api/v1/hosts");
@@ -227,12 +227,23 @@ void MainWindow::doUpdate()
 
 void MainWindow::updateFinished(QNetworkReply* reply)
 {
-    qDebug() << "finished!" << reply;
-    qDebug() << "code:" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    Q_ASSERT(reply);
+
+    int status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+    if (401 == status)
+    {
+        // XXX get this info to user...
+        qDebug() << "Unauthorized response submitting updates, check key!";
+        return;
+    }
+
+    qDebug() << QString("Submitted updates (status: %1)").arg(status);
 }
 
 void MainWindow::sslErrors(QNetworkReply * reply, const QList<QSslError> & errors)
 {
+    // XXX kill this once ssl cert is setup
     qDebug() << "ssl errors:" << errors;
     reply->ignoreSslErrors(errors);
 }

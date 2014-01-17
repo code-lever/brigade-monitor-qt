@@ -74,6 +74,9 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
     update["uptime"] = summary.object()["SUMMARY"].toArray()[0].toObject()["Elapsed"];
     update["mhash"] = summary.object()["SUMMARY"].toArray()[0].toObject()["MHS av"];
     update["rejectpct"] = summary.object()["SUMMARY"].toArray()[0].toObject()["Pool Rejected%"];
+    update["api-version"] = version.object()["VERSION"].toArray()[0].toObject()["API"];
+    update["cgminer-version"] = version.object()["VERSION"].toArray()[0].toObject()["CGMiner"];
+    update["sgminer-version"] = version.object()["VERSION"].toArray()[0].toObject()["SGMiner"];
 
     QJsonObject agent;
     agent["name"] = QString("brigade-monitor-qt");

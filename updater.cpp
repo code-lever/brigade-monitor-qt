@@ -102,6 +102,36 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
             gpu["rejectpct"] = devObj["Device Rejected%"];
             gpus.append(gpu);
         }
+        else if (devObj.contains("ASC"))
+        {
+            QJsonObject asc;
+            asc["index"] = devObj["ASC"];
+            asc["temperature"] = devObj["Temperature"];
+            asc["enabled"] = devObj["Enabled"].toString() == "Y";
+            asc["status"] = devObj["Status"];
+            asc["uptime"] = devObj["Device Elapsed"];
+            asc["mhash"] = devObj["MHS av"];
+            asc["hwerrors"] = devObj["Hardware Errors"];
+            asc["rejectpct"] = devObj["Device Rejected%"];
+            asics.append(asc);
+        }
+        else if (devObj.contains("PGA"))
+        {
+            QJsonObject pga;
+            pga["index"] = devObj["PGA"];
+            pga["temperature"] = devObj["Temperature"];
+            pga["enabled"] = devObj["Enabled"].toString() == "Y";
+            pga["status"] = devObj["Status"];
+            pga["uptime"] = devObj["Device Elapsed"];
+            pga["mhash"] = devObj["MHS av"];
+            pga["hwerrors"] = devObj["Hardware Errors"];
+            pga["rejectpct"] = devObj["Device Rejected%"];
+            fpgas.append(pga);
+        }
+        else
+        {
+            qDebug() << "Skipped unknown device:" << devObj;
+        }
     }
     update["gpus"] = gpus;
     update["asics"] = asics;

@@ -228,6 +228,7 @@ void MainWindow::doUpdate()
 void MainWindow::updateFinished(QNetworkReply* reply)
 {
     qDebug() << "finished!" << reply;
+    qDebug() << "code:" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
 }
 
 void MainWindow::sslErrors(QNetworkReply * reply, const QList<QSslError> & errors)

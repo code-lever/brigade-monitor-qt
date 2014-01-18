@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         timer->start(UPDATE_PERIOD);
     }
+
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 }
 
 MainWindow::~MainWindow()

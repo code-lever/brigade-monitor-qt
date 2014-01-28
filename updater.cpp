@@ -145,6 +145,15 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
         pool["index"] = devObj["POOL"];
         pool["url"] = devObj["URL"];
         pool["status"] = devObj["Status"];
+        pool["priority"] = devObj["Priority"];
+        pool["quota"] = devObj["Quota"];
+        pool["longpoll"] = devObj["Long Poll"].toString() == "Y";
+        pool["getworks"] = devObj["Getworks"];
+        pool["accepted"] = devObj["Accepted"];
+        pool["rejected"] = devObj["Rejected"];
+        pool["works"] = devObj["Works"];
+        pool["discarded"] = devObj["Discarded"];
+        pool["stale"] = devObj["Stale"];
         pool["active"] = devObj["Stratum Active"];
         pool["rejectpct"] = devObj["Pool Rejected%"];
         jpools.append(pool);

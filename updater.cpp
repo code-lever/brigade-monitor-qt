@@ -73,10 +73,10 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
     update["host"] = miner.name;
     update["uptime"] = summary.object()["SUMMARY"].toArray()[0].toObject()["Elapsed"];
     update["mhash"] = summary.object()["SUMMARY"].toArray()[0].toObject()["MHS av"];
-    update["rejectpct"] = summary.object()["SUMMARY"].toArray()[0].toObject()["Pool Rejected%"];
-    update["api-version"] = version.object()["VERSION"].toArray()[0].toObject()["API"];
-    update["cgminer-version"] = version.object()["VERSION"].toArray()[0].toObject()["CGMiner"];
-    update["sgminer-version"] = version.object()["VERSION"].toArray()[0].toObject()["SGMiner"];
+    update["rejected_percent"] = summary.object()["SUMMARY"].toArray()[0].toObject()["Pool Rejected%"];
+    update["api_version"] = version.object()["VERSION"].toArray()[0].toObject()["API"];
+    update["cgminer_version"] = version.object()["VERSION"].toArray()[0].toObject()["CGMiner"];
+    update["sgminer_version"] = version.object()["VERSION"].toArray()[0].toObject()["SGMiner"];
 
     QJsonObject agent;
     agent["name"] = QString("brigade-monitor-qt");
@@ -99,7 +99,7 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
             gpu["uptime"] = devObj["Device Elapsed"];
             gpu["mhash"] = devObj["MHS av"];
             gpu["hwerrors"] = devObj["Hardware Errors"];
-            gpu["rejectpct"] = devObj["Device Rejected%"];
+            gpu["rejected_percent"] = devObj["Device Rejected%"];
             gpus.append(gpu);
         }
         else if (devObj.contains("ASC"))
@@ -112,7 +112,7 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
             asc["uptime"] = devObj["Device Elapsed"];
             asc["mhash"] = devObj["MHS av"];
             asc["hwerrors"] = devObj["Hardware Errors"];
-            asc["rejectpct"] = devObj["Device Rejected%"];
+            asc["rejected_percent"] = devObj["Device Rejected%"];
             asics.append(asc);
         }
         else if (devObj.contains("PGA"))
@@ -125,7 +125,7 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
             pga["uptime"] = devObj["Device Elapsed"];
             pga["mhash"] = devObj["MHS av"];
             pga["hwerrors"] = devObj["Hardware Errors"];
-            pga["rejectpct"] = devObj["Device Rejected%"];
+            pga["rejected_percent"] = devObj["Device Rejected%"];
             fpgas.append(pga);
         }
         else
@@ -155,7 +155,7 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
         pool["discarded"] = devObj["Discarded"];
         pool["stale"] = devObj["Stale"];
         pool["active"] = devObj["Stratum Active"];
-        pool["rejectpct"] = devObj["Pool Rejected%"];
+        pool["rejected_percent"] = devObj["Pool Rejected%"];
         jpools.append(pool);
     }
     update["pools"] = jpools;

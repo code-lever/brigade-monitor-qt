@@ -118,12 +118,32 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
             QJsonObject gpu;
             gpu["index"] = devObj["GPU"];
             gpu["temperature"] = devObj["Temperature"];
+            gpu["fan_speed"] = devObj["Fan Speed"];
+            gpu["fan_percent"] = devObj["Fan Percent"];
+            gpu["gpu_clock"] = devObj["GPU Clock"];
+            gpu["memory_clock"] = devObj["Memory Clock"];
+            gpu["gpu_voltage"] = devObj["GPU Voltage"];
+            gpu["gpu_activity"] = devObj["GPU Activity"];
+            gpu["powertune"] = devObj["Powertune"];
             gpu["enabled"] = devObj["Enabled"].toString() == "Y";
             gpu["status"] = devObj["Status"];
             gpu["uptime"] = devObj["Device Elapsed"];
-            gpu["mhash"] = devObj["MHS av"];
-            gpu["hwerrors"] = devObj["Hardware Errors"];
+            gpu["mhash_average"] = devObj["MHS av"];
+            gpu["mhash_current"] = devObj["MHS 5s"];
+            gpu["accepted"] = devObj["Accepted"];
+            gpu["rejected"] = devObj["Rejected"];
+            gpu["hardware_errors"] = devObj["Hardware Errors"];
+            gpu["utility"] = devObj["Utility"];
+            gpu["intensity"] = devObj["Intensity"];
             gpu["rejected_percent"] = devObj["Device Rejected%"];
+            gpu["last_share_pool"] = devObj["Last Share Pool"];
+            gpu["last_share_time"] = devObj["Last Share Time"];
+            gpu["total_mhash"] = devObj["Total MH"];
+            gpu["diff1_work"] = devObj["Diff1 Work"];
+            gpu["difficulty_accepted"] = devObj["Difficulty Accepted"];
+            gpu["difficulty_rejected"] = devObj["Difficulty Rejected"];
+            gpu["last_share_difficulty"] = devObj["Last Share Difficulty"];
+            gpu["last_valid_work"] = devObj["Last Valid Work"];
             gpus.append(gpu);
         }
         else if (devObj.contains("ASC"))
@@ -134,9 +154,21 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
             asc["enabled"] = devObj["Enabled"].toString() == "Y";
             asc["status"] = devObj["Status"];
             asc["uptime"] = devObj["Device Elapsed"];
-            asc["mhash"] = devObj["MHS av"];
-            asc["hwerrors"] = devObj["Hardware Errors"];
+            asc["mhash_average"] = devObj["MHS av"];
+            asc["mhash_current"] = devObj["MHS 5s"];
+            asc["accepted"] = devObj["Accepted"];
+            asc["rejected"] = devObj["Rejected"];
+            asc["hardware_errors"] = devObj["Hardware Errors"];
+            asc["utility"] = devObj["Utility"];
             asc["rejected_percent"] = devObj["Device Rejected%"];
+            asc["last_share_pool"] = devObj["Last Share Pool"];
+            asc["last_share_time"] = devObj["Last Share Time"];
+            asc["total_mhash"] = devObj["Total MH"];
+            asc["diff1_work"] = devObj["Diff1 Work"];
+            asc["difficulty_accepted"] = devObj["Difficulty Accepted"];
+            asc["difficulty_rejected"] = devObj["Difficulty Rejected"];
+            asc["last_share_difficulty"] = devObj["Last Share Difficulty"];
+            asc["last_valid_work"] = devObj["Last Valid Work"];
             asics.append(asc);
         }
         else if (devObj.contains("PGA"))
@@ -147,9 +179,22 @@ QJsonObject Updater::getUpdate(const HostInformation& miner)
             pga["enabled"] = devObj["Enabled"].toString() == "Y";
             pga["status"] = devObj["Status"];
             pga["uptime"] = devObj["Device Elapsed"];
-            pga["mhash"] = devObj["MHS av"];
-            pga["hwerrors"] = devObj["Hardware Errors"];
+            pga["mhash_average"] = devObj["MHS av"];
+            pga["mhash_current"] = devObj["MHS 5s"];
+            pga["accepted"] = devObj["Accepted"];
+            pga["rejected"] = devObj["Rejected"];
+            pga["hardware_errors"] = devObj["Hardware Errors"];
+            pga["utility"] = devObj["Utility"];
             pga["rejected_percent"] = devObj["Device Rejected%"];
+            pga["last_share_pool"] = devObj["Last Share Pool"];
+            pga["last_share_time"] = devObj["Last Share Time"];
+            pga["total_mhash"] = devObj["Total MH"];
+            pga["frequency"] = devObj["Frequency"];
+            pga["diff1_work"] = devObj["Diff1 Work"];
+            pga["difficulty_accepted"] = devObj["Difficulty Accepted"];
+            pga["difficulty_rejected"] = devObj["Difficulty Rejected"];
+            pga["last_share_difficulty"] = devObj["Last Share Difficulty"];
+            pga["last_valid_work"] = devObj["Last Valid Work"];
             fpgas.append(pga);
         }
         else

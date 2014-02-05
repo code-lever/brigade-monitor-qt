@@ -16,12 +16,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     cgminerapi.cpp \
 updater.cpp \
-    qtsysteminfo.cpp
+    qtsysteminfo.cpp \
+fetcher.cpp
 
 HEADERS  += mainwindow.h \
     cgminerapi.h \
 updater.h \
-    qtsysteminfo.h
+    qtsysteminfo.h \
+fetcher.h \
+host_information.h
 
 FORMS    += mainwindow.ui
 

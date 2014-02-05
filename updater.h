@@ -1,6 +1,7 @@
 #ifndef UPDATER_H
 #define UPDATER_H
 
+#include "host_information.h"
 #include "qtsysteminfo.h"
 
 #include <QObject>
@@ -14,13 +15,6 @@ class Updater : public QObject
     Q_OBJECT
 
 public:
-    struct HostInformation
-    {
-        QString name;
-        QString host;
-        quint16 port;
-    };
-
     Updater(QObject *parent = 0);
 
     virtual ~Updater();

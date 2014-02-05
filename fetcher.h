@@ -23,6 +23,12 @@ public:
 
 private:
     HostInformation miner;
+
+    QJsonObject getHostInfo(const QJsonObject& summary, const QJsonObject& version);
+    QJsonObject getAsicInfo(const QJsonObject& device);
+    QJsonObject getFpgaInfo(const QJsonObject& device);
+    QJsonObject getGpuInfo(const QJsonObject& device);
+    QJsonObject getPoolInfo(const QJsonObject& pool);
 };
 
 #endif // FETCHER_H

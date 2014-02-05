@@ -26,36 +26,7 @@ QJsonObject Fetcher::getUpdate(QtSystemInfo& systemInfo)
 
     QJsonObject sum = summary.object()["SUMMARY"].toArray()[0].toObject();
     QJsonObject ver = version.object()["VERSION"].toArray()[0].toObject();
-    QJsonObject update;
-    update["host"] = miner.name;
-    update["uptime"] = sum["Elapsed"];
-    update["mhash_average"] = sum["MHS av"];
-    update["mhash_current"] = sum["MHS 5s"];
-    update["found_blocks"] = sum["Found Blocks"];
-    update["getworks"] = sum["Getworks"];
-    update["accepted"] = sum["Accepted"];
-    update["rejected"] = sum["Rejected"];
-    update["hardware_errors"] = sum["Hardware Errors"];
-    update["utility"] = sum["Utility"];
-    update["discarded"] = sum["Discarded"];
-    update["stale"] = sum["Stale"];
-    update["get_failures"] = sum["Get Failures"];
-    update["local_work"] = sum["Local Work"];
-    update["remote_failures"] = sum["Remote Failures"];
-    update["network_blocks"] = sum["Network Blocks"];
-    update["total_mhash"] = sum["Total MH"];
-    update["work_utility"] = sum["Work Utility"];
-    update["difficulty_accepted"] = sum["Difficulty Accepted"];
-    update["difficulty_rejected"] = sum["Difficulty Rejected"];
-    update["difficulty_stale"] = sum["Difficulty Stale"];
-    update["best_share"] = sum["Best Share"];
-    update["device_hardware_percent"] = sum["Device Hardware%"];
-    update["device_rejected_percent"] = sum["Device Rejected%"];
-    update["pool_rejected_percent"] = sum["Pool Rejected%"];
-    update["pool_stale_percent"] = sum["Pool Stale%"];
-    update["api_version"] = ver["API"];
-    update["cgminer_version"] = ver["CGMiner"];
-    update["sgminer_version"] = ver["SGMiner"];
+    QJsonObject update = getHostInfo(sum, ver);
 
     QJsonObject agent;
     agent["name"] = QString("brigade-monitor-qt");
@@ -70,87 +41,15 @@ QJsonObject Fetcher::getUpdate(QtSystemInfo& systemInfo)
 
         if (devObj.contains("GPU"))
         {
-            QJsonObject gpu;
-            gpu["index"] = devObj["GPU"];
-            gpu["temperature"] = devObj["Temperature"];
-            gpu["fan_speed"] = devObj["Fan Speed"];
-            gpu["fan_percent"] = devObj["Fan Percent"];
-            gpu["gpu_clock"] = devObj["GPU Clock"];
-            gpu["memory_clock"] = devObj["Memory Clock"];
-            gpu["gpu_voltage"] = devObj["GPU Voltage"];
-            gpu["gpu_activity"] = devObj["GPU Activity"];
-            gpu["powertune"] = devObj["Powertune"];
-            gpu["enabled"] = devObj["Enabled"].toString() == "Y";
-            gpu["status"] = devObj["Status"];
-            gpu["uptime"] = devObj["Device Elapsed"];
-            gpu["mhash_average"] = devObj["MHS av"];
-            gpu["mhash_current"] = devObj["MHS 5s"];
-            gpu["accepted"] = devObj["Accepted"];
-            gpu["rejected"] = devObj["Rejected"];
-            gpu["hardware_errors"] = devObj["Hardware Errors"];
-            gpu["utility"] = devObj["Utility"];
-            gpu["intensity"] = devObj["Intensity"];
-            gpu["rejected_percent"] = devObj["Device Rejected%"];
-            gpu["last_share_pool"] = devObj["Last Share Pool"];
-            gpu["last_share_time"] = devObj["Last Share Time"];
-            gpu["total_mhash"] = devObj["Total MH"];
-            gpu["diff1_work"] = devObj["Diff1 Work"];
-            gpu["difficulty_accepted"] = devObj["Difficulty Accepted"];
-            gpu["difficulty_rejected"] = devObj["Difficulty Rejected"];
-            gpu["last_share_difficulty"] = devObj["Last Share Difficulty"];
-            gpu["last_valid_work"] = devObj["Last Valid Work"];
-            gpus.append(gpu);
+            gpus.append(getGpuInfo(devObj));
         }
         else if (devObj.contains("ASC"))
         {
-            QJsonObject asc;
-            asc["index"] = devObj["ASC"];
-            asc["temperature"] = devObj["Temperature"];
-            asc["enabled"] = devObj["Enabled"].toString() == "Y";
-            asc["status"] = devObj["Status"];
-            asc["uptime"] = devObj["Device Elapsed"];
-            asc["mhash_average"] = devObj["MHS av"];
-            asc["mhash_current"] = devObj["MHS 5s"];
-            asc["accepted"] = devObj["Accepted"];
-            asc["rejected"] = devObj["Rejected"];
-            asc["hardware_errors"] = devObj["Hardware Errors"];
-            asc["utility"] = devObj["Utility"];
-            asc["rejected_percent"] = devObj["Device Rejected%"];
-            asc["last_share_pool"] = devObj["Last Share Pool"];
-            asc["last_share_time"] = devObj["Last Share Time"];
-            asc["total_mhash"] = devObj["Total MH"];
-            asc["diff1_work"] = devObj["Diff1 Work"];
-            asc["difficulty_accepted"] = devObj["Difficulty Accepted"];
-            asc["difficulty_rejected"] = devObj["Difficulty Rejected"];
-            asc["last_share_difficulty"] = devObj["Last Share Difficulty"];
-            asc["last_valid_work"] = devObj["Last Valid Work"];
-            asics.append(asc);
+            asics.append(getAsicInfo(devObj));
         }
         else if (devObj.contains("PGA"))
         {
-            QJsonObject pga;
-            pga["index"] = devObj["PGA"];
-            pga["temperature"] = devObj["Temperature"];
-            pga["enabled"] = devObj["Enabled"].toString() == "Y";
-            pga["status"] = devObj["Status"];
-            pga["uptime"] = devObj["Device Elapsed"];
-            pga["mhash_average"] = devObj["MHS av"];
-            pga["mhash_current"] = devObj["MHS 5s"];
-            pga["accepted"] = devObj["Accepted"];
-            pga["rejected"] = devObj["Rejected"];
-            pga["hardware_errors"] = devObj["Hardware Errors"];
-            pga["utility"] = devObj["Utility"];
-            pga["rejected_percent"] = devObj["Device Rejected%"];
-            pga["last_share_pool"] = devObj["Last Share Pool"];
-            pga["last_share_time"] = devObj["Last Share Time"];
-            pga["total_mhash"] = devObj["Total MH"];
-            pga["frequency"] = devObj["Frequency"];
-            pga["diff1_work"] = devObj["Diff1 Work"];
-            pga["difficulty_accepted"] = devObj["Difficulty Accepted"];
-            pga["difficulty_rejected"] = devObj["Difficulty Rejected"];
-            pga["last_share_difficulty"] = devObj["Last Share Difficulty"];
-            pga["last_valid_work"] = devObj["Last Valid Work"];
-            fpgas.append(pga);
+            fpgas.append(getFpgaInfo(devObj));
         }
         else
         {
@@ -164,41 +63,167 @@ QJsonObject Fetcher::getUpdate(QtSystemInfo& systemInfo)
     QJsonArray jpools;
     Q_FOREACH (QJsonValue value, pools.object()["POOLS"].toArray())
     {
-        QJsonObject devObj = value.toObject();
-        QJsonObject pool;
-        pool["index"] = devObj["POOL"];
-        pool["url"] = devObj["URL"];
-        pool["status"] = devObj["Status"];
-        pool["priority"] = devObj["Priority"];
-        pool["quota"] = devObj["Quota"];
-        pool["longpoll"] = devObj["Long Poll"].toString() == "Y";
-        pool["getworks"] = devObj["Getworks"];
-        pool["accepted"] = devObj["Accepted"];
-        pool["rejected"] = devObj["Rejected"];
-        pool["works"] = devObj["Works"];
-        pool["discarded"] = devObj["Discarded"];
-        pool["stale"] = devObj["Stale"];
-        pool["get_failures"] = devObj["Get Failures"];
-        pool["remote_failures"] = devObj["Remote Failures"];
-        pool["user"] = devObj["User"];
-        pool["last_share_time"] = devObj["Last Share Time"];
-        pool["diff1_shares"] = devObj["Diff1 Shares"];
-        pool["proxy_type"] = devObj["Proxy Type"];
-        pool["proxy"] = devObj["Proxy"];
-        pool["difficulty_accepted"] = devObj["Difficulty Accepted"];
-        pool["difficulty_rejected"] = devObj["Difficulty Rejected"];
-        pool["difficulty_stale"] = devObj["Difficulty Stale"];
-        pool["last_share_difficulty"] = devObj["Last Share Difficulty"];
-        pool["has_stratum"] = devObj["Has Stratum"];
-        pool["stratum_url"] = devObj["Stratum URL"];
-        pool["has_gbt"] = devObj["Has GBT"];
-        pool["best_share"] = devObj["Best Share"];
-        pool["active"] = devObj["Stratum Active"];
-        pool["pool_rejected_percent"] = devObj["Pool Rejected%"];
-        pool["pool_stale_percent"] = devObj["Pool Stale%"];
-        jpools.append(pool);
+        jpools.append(getPoolInfo(value.toObject()));
     }
     update["pools"] = jpools;
 
     return update;
+}
+
+QJsonObject Fetcher::getHostInfo(const QJsonObject& summary, const QJsonObject& version)
+{
+    QJsonObject obj;
+    obj["host"] = miner.name;
+    obj["uptime"] = summary["Elapsed"];
+    obj["mhash_average"] = summary["MHS av"];
+    obj["mhash_current"] = summary["MHS 5s"];
+    obj["found_blocks"] = summary["Found Blocks"];
+    obj["getworks"] = summary["Getworks"];
+    obj["accepted"] = summary["Accepted"];
+    obj["rejected"] = summary["Rejected"];
+    obj["hardware_errors"] = summary["Hardware Errors"];
+    obj["utility"] = summary["Utility"];
+    obj["discarded"] = summary["Discarded"];
+    obj["stale"] = summary["Stale"];
+    obj["get_failures"] = summary["Get Failures"];
+    obj["local_work"] = summary["Local Work"];
+    obj["remote_failures"] = summary["Remote Failures"];
+    obj["network_blocks"] = summary["Network Blocks"];
+    obj["total_mhash"] = summary["Total MH"];
+    obj["work_utility"] = summary["Work Utility"];
+    obj["difficulty_accepted"] = summary["Difficulty Accepted"];
+    obj["difficulty_rejected"] = summary["Difficulty Rejected"];
+    obj["difficulty_stale"] = summary["Difficulty Stale"];
+    obj["best_share"] = summary["Best Share"];
+    obj["device_hardware_percent"] = summary["Device Hardware%"];
+    obj["device_rejected_percent"] = summary["Device Rejected%"];
+    obj["pool_rejected_percent"] = summary["Pool Rejected%"];
+    obj["pool_stale_percent"] = summary["Pool Stale%"];
+    obj["api_version"] = version["API"];
+    obj["cgminer_version"] = version["CGMiner"];
+    obj["sgminer_version"] = version["SGMiner"];
+    return obj;
+}
+
+QJsonObject Fetcher::getAsicInfo(const QJsonObject& device)
+{
+    QJsonObject obj;
+    obj["index"] = device["ASC"];
+    obj["temperature"] = device["Temperature"];
+    obj["enabled"] = device["Enabled"].toString() == "Y";
+    obj["status"] = device["Status"];
+    obj["uptime"] = device["Device Elapsed"];
+    obj["mhash_average"] = device["MHS av"];
+    obj["mhash_current"] = device["MHS 5s"];
+    obj["accepted"] = device["Accepted"];
+    obj["rejected"] = device["Rejected"];
+    obj["hardware_errors"] = device["Hardware Errors"];
+    obj["utility"] = device["Utility"];
+    obj["rejected_percent"] = device["Device Rejected%"];
+    obj["last_share_pool"] = device["Last Share Pool"];
+    obj["last_share_time"] = device["Last Share Time"];
+    obj["total_mhash"] = device["Total MH"];
+    obj["diff1_work"] = device["Diff1 Work"];
+    obj["difficulty_accepted"] = device["Difficulty Accepted"];
+    obj["difficulty_rejected"] = device["Difficulty Rejected"];
+    obj["last_share_difficulty"] = device["Last Share Difficulty"];
+    obj["last_valid_work"] = device["Last Valid Work"];
+    return obj;
+}
+
+QJsonObject Fetcher::getFpgaInfo(const QJsonObject& device)
+{
+    QJsonObject obj;
+    obj["index"] = device["PGA"];
+    obj["temperature"] = device["Temperature"];
+    obj["enabled"] = device["Enabled"].toString() == "Y";
+    obj["status"] = device["Status"];
+    obj["uptime"] = device["Device Elapsed"];
+    obj["mhash_average"] = device["MHS av"];
+    obj["mhash_current"] = device["MHS 5s"];
+    obj["accepted"] = device["Accepted"];
+    obj["rejected"] = device["Rejected"];
+    obj["hardware_errors"] = device["Hardware Errors"];
+    obj["utility"] = device["Utility"];
+    obj["rejected_percent"] = device["Device Rejected%"];
+    obj["last_share_pool"] = device["Last Share Pool"];
+    obj["last_share_time"] = device["Last Share Time"];
+    obj["total_mhash"] = device["Total MH"];
+    obj["frequency"] = device["Frequency"];
+    obj["diff1_work"] = device["Diff1 Work"];
+    obj["difficulty_accepted"] = device["Difficulty Accepted"];
+    obj["difficulty_rejected"] = device["Difficulty Rejected"];
+    obj["last_share_difficulty"] = device["Last Share Difficulty"];
+    obj["last_valid_work"] = device["Last Valid Work"];
+    return obj;
+}
+
+QJsonObject Fetcher::getGpuInfo(const QJsonObject& device)
+{
+    QJsonObject obj;
+    obj["index"] = device["GPU"];
+    obj["temperature"] = device["Temperature"];
+    obj["fan_speed"] = device["Fan Speed"];
+    obj["fan_percent"] = device["Fan Percent"];
+    obj["gpu_clock"] = device["GPU Clock"];
+    obj["memory_clock"] = device["Memory Clock"];
+    obj["gpu_voltage"] = device["GPU Voltage"];
+    obj["gpu_activity"] = device["GPU Activity"];
+    obj["powertune"] = device["Powertune"];
+    obj["enabled"] = device["Enabled"].toString() == "Y";
+    obj["status"] = device["Status"];
+    obj["uptime"] = device["Device Elapsed"];
+    obj["mhash_average"] = device["MHS av"];
+    obj["mhash_current"] = device["MHS 5s"];
+    obj["accepted"] = device["Accepted"];
+    obj["rejected"] = device["Rejected"];
+    obj["hardware_errors"] = device["Hardware Errors"];
+    obj["utility"] = device["Utility"];
+    obj["intensity"] = device["Intensity"];
+    obj["rejected_percent"] = device["Device Rejected%"];
+    obj["last_share_pool"] = device["Last Share Pool"];
+    obj["last_share_time"] = device["Last Share Time"];
+    obj["total_mhash"] = device["Total MH"];
+    obj["diff1_work"] = device["Diff1 Work"];
+    obj["difficulty_accepted"] = device["Difficulty Accepted"];
+    obj["difficulty_rejected"] = device["Difficulty Rejected"];
+    obj["last_share_difficulty"] = device["Last Share Difficulty"];
+    obj["last_valid_work"] = device["Last Valid Work"];
+    return obj;
+}
+
+QJsonObject Fetcher::getPoolInfo(const QJsonObject& pool)
+{
+    QJsonObject obj;
+    obj["index"] = pool["POOL"];
+    obj["url"] = pool["URL"];
+    obj["status"] = pool["Status"];
+    obj["priority"] = pool["Priority"];
+    obj["quota"] = pool["Quota"];
+    obj["longpoll"] = pool["Long Poll"].toString() == "Y";
+    obj["getworks"] = pool["Getworks"];
+    obj["accepted"] = pool["Accepted"];
+    obj["rejected"] = pool["Rejected"];
+    obj["works"] = pool["Works"];
+    obj["discarded"] = pool["Discarded"];
+    obj["stale"] = pool["Stale"];
+    obj["get_failures"] = pool["Get Failures"];
+    obj["remote_failures"] = pool["Remote Failures"];
+    obj["user"] = pool["User"];
+    obj["last_share_time"] = pool["Last Share Time"];
+    obj["diff1_shares"] = pool["Diff1 Shares"];
+    obj["proxy_type"] = pool["Proxy Type"];
+    obj["proxy"] = pool["Proxy"];
+    obj["difficulty_accepted"] = pool["Difficulty Accepted"];
+    obj["difficulty_rejected"] = pool["Difficulty Rejected"];
+    obj["difficulty_stale"] = pool["Difficulty Stale"];
+    obj["last_share_difficulty"] = pool["Last Share Difficulty"];
+    obj["has_stratum"] = pool["Has Stratum"];
+    obj["stratum_url"] = pool["Stratum URL"];
+    obj["has_gbt"] = pool["Has GBT"];
+    obj["best_share"] = pool["Best Share"];
+    obj["active"] = pool["Stratum Active"];
+    obj["pool_rejected_percent"] = pool["Pool Rejected%"];
+    obj["pool_stale_percent"] = pool["Pool Stale%"];
+    return obj;
 }

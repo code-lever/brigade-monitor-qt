@@ -25,6 +25,14 @@ private:
     HostInformation miner;
 
     QJsonObject getHostInfo(const QJsonObject& summary, const QJsonObject& version);
+
+    /**
+     * Gets shared device information.
+     *
+     * @param device single device from a 'devs' API call
+     * @return object with common device info loaded
+     */
+    QJsonObject getDeviceInfo(const QJsonObject& device);
     QJsonObject getAsicInfo(const QJsonObject& device);
     QJsonObject getFpgaInfo(const QJsonObject& device);
     QJsonObject getGpuInfo(const QJsonObject& device);

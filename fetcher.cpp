@@ -105,10 +105,9 @@ QJsonObject Fetcher::getHostInfo(const QJsonObject& summary, const QJsonObject& 
     return obj;
 }
 
-QJsonObject Fetcher::getAsicInfo(const QJsonObject& device)
+QJsonObject Fetcher::getDeviceInfo(const QJsonObject& device)
 {
     QJsonObject obj;
-    obj["index"] = device["ASC"];
     obj["temperature"] = device["Temperature"];
     obj["enabled"] = device["Enabled"].toString() == "Y";
     obj["status"] = device["Status"];
@@ -128,41 +127,28 @@ QJsonObject Fetcher::getAsicInfo(const QJsonObject& device)
     obj["difficulty_rejected"] = device["Difficulty Rejected"];
     obj["last_share_difficulty"] = device["Last Share Difficulty"];
     obj["last_valid_work"] = device["Last Valid Work"];
+    return obj;
+}
+
+QJsonObject Fetcher::getAsicInfo(const QJsonObject& device)
+{
+    QJsonObject obj = getDeviceInfo(device);
+    obj["index"] = device["ASC"];
     return obj;
 }
 
 QJsonObject Fetcher::getFpgaInfo(const QJsonObject& device)
 {
-    QJsonObject obj;
+    QJsonObject obj = getDeviceInfo(device);
     obj["index"] = device["PGA"];
-    obj["temperature"] = device["Temperature"];
-    obj["enabled"] = device["Enabled"].toString() == "Y";
-    obj["status"] = device["Status"];
-    obj["uptime"] = device["Device Elapsed"];
-    obj["mhash_average"] = device["MHS av"];
-    obj["mhash_current"] = device["MHS 5s"];
-    obj["accepted"] = device["Accepted"];
-    obj["rejected"] = device["Rejected"];
-    obj["hardware_errors"] = device["Hardware Errors"];
-    obj["utility"] = device["Utility"];
-    obj["rejected_percent"] = device["Device Rejected%"];
-    obj["last_share_pool"] = device["Last Share Pool"];
-    obj["last_share_time"] = device["Last Share Time"];
-    obj["total_mhash"] = device["Total MH"];
     obj["frequency"] = device["Frequency"];
-    obj["diff1_work"] = device["Diff1 Work"];
-    obj["difficulty_accepted"] = device["Difficulty Accepted"];
-    obj["difficulty_rejected"] = device["Difficulty Rejected"];
-    obj["last_share_difficulty"] = device["Last Share Difficulty"];
-    obj["last_valid_work"] = device["Last Valid Work"];
     return obj;
 }
 
 QJsonObject Fetcher::getGpuInfo(const QJsonObject& device)
 {
-    QJsonObject obj;
+    QJsonObject obj = getDeviceInfo(device);
     obj["index"] = device["GPU"];
-    obj["temperature"] = device["Temperature"];
     obj["fan_speed"] = device["Fan Speed"];
     obj["fan_percent"] = device["Fan Percent"];
     obj["gpu_clock"] = device["GPU Clock"];
@@ -170,25 +156,7 @@ QJsonObject Fetcher::getGpuInfo(const QJsonObject& device)
     obj["gpu_voltage"] = device["GPU Voltage"];
     obj["gpu_activity"] = device["GPU Activity"];
     obj["powertune"] = device["Powertune"];
-    obj["enabled"] = device["Enabled"].toString() == "Y";
-    obj["status"] = device["Status"];
-    obj["uptime"] = device["Device Elapsed"];
-    obj["mhash_average"] = device["MHS av"];
-    obj["mhash_current"] = device["MHS 5s"];
-    obj["accepted"] = device["Accepted"];
-    obj["rejected"] = device["Rejected"];
-    obj["hardware_errors"] = device["Hardware Errors"];
-    obj["utility"] = device["Utility"];
     obj["intensity"] = device["Intensity"];
-    obj["rejected_percent"] = device["Device Rejected%"];
-    obj["last_share_pool"] = device["Last Share Pool"];
-    obj["last_share_time"] = device["Last Share Time"];
-    obj["total_mhash"] = device["Total MH"];
-    obj["diff1_work"] = device["Diff1 Work"];
-    obj["difficulty_accepted"] = device["Difficulty Accepted"];
-    obj["difficulty_rejected"] = device["Difficulty Rejected"];
-    obj["last_share_difficulty"] = device["Last Share Difficulty"];
-    obj["last_valid_work"] = device["Last Valid Work"];
     return obj;
 }
 

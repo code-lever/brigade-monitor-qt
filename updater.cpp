@@ -29,7 +29,7 @@ Updater::Updater(QObject *parent)
 
         if (!ok)
         {
-            // XXX notify port error?
+            // XXX notify port conversion error? log?
             continue;
         }
 

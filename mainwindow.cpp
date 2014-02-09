@@ -6,6 +6,7 @@
 #include <QSettings>
 #include <QTimer>
 
+#define INITIAL_PERIOD 2500
 #define UPDATE_PERIOD 60000
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -34,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     if (isRunning())
     {
-        timer->start(UPDATE_PERIOD);
+        timer->start(INITIAL_PERIOD);
     }
 
     qDebug() << QStandardPaths::writableLocation(QStandardPaths::DataLocation);
@@ -161,7 +162,7 @@ void MainWindow::toggleRunning()
 
     if (isRunning())
     {
-        timer->start(5000);
+        timer->start(INITIAL_PERIOD);
     }
     else
     {

@@ -28,7 +28,6 @@ private slots:
     void keyTextEdited();
     void doUpdate();
     void updateFinished(QNetworkReply*);
-    void sslErrors(QNetworkReply * reply, const QList<QSslError> & errors);
 
 private:
     Ui::MainWindow *ui;

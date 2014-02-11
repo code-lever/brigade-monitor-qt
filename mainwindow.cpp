@@ -18,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 
     connect(&nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(updateFinished(QNetworkReply*)));
-    connect(&nam, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(sslErrors(QNetworkReply*,QList<QSslError>)));
 
     createTrayIcon();
     trayIcon->show();
@@ -244,9 +243,3 @@ void MainWindow::updateFinished(QNetworkReply* reply)
     qDebug() << QString("Submitted updates (status: %1)").arg(status);
 }
 
-void MainWindow::sslErrors(QNetworkReply * reply, const QList<QSslError> & errors)
-{
-    // XXX kill this once ssl cert is setup
-    qDebug() << "ssl errors:" << errors;
-    reply->ignoreSslErrors(errors);
-}

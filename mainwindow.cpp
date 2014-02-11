@@ -202,7 +202,7 @@ void MainWindow::doUpdate()
 #if 0
         QUrl url("http://localhost:3000/api/v1/hosts");
 #else
-        QUrl url("https://app.brigade.io/api/v1/hosts");
+        QUrl url("https://www.brigade.io/api/v1/hosts");
 #endif
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");

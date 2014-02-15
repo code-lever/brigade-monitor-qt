@@ -26,6 +26,8 @@ private:
 
     QJsonObject getHostInfo(const QJsonObject& summary, const QJsonObject& version);
 
+    double findMhashCurrent(const QJsonObject& mhashy);
+
     /**
      * Gets shared device information.
      *

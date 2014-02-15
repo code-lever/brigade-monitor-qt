@@ -76,7 +76,7 @@ QJsonObject Fetcher::getHostInfo(const QJsonObject& summary, const QJsonObject& 
     obj["host"] = miner.name;
     obj["uptime"] = summary["Elapsed"];
     obj["mhash_average"] = summary["MHS av"];
-    obj["mhash_current"] = summary["MHS 5s"];
+    obj["mhash_current"] = findMhashCurrent(summary);
     obj["found_blocks"] = summary["Found Blocks"];
     obj["getworks"] = summary["Getworks"];
     obj["accepted"] = summary["Accepted"];
@@ -105,6 +105,12 @@ QJsonObject Fetcher::getHostInfo(const QJsonObject& summary, const QJsonObject& 
     return obj;
 }
 
+double Fetcher::findMhashCurrent(const QJsonObject& mhashy)
+{
+    QStringList keys = mhashy.keys().filter(QRegularExpression("MHS \\ds"));
+    return keys.size() == 1 ? mhashy[keys.first()].toDouble() : 0.0f;
+}
+
 QJsonObject Fetcher::getDeviceInfo(const QJsonObject& device)
 {
     QJsonObject obj;
@@ -113,7 +119,7 @@ QJsonObject Fetcher::getDeviceInfo(const QJsonObject& device)
     obj["status"] = device["Status"];
     obj["uptime"] = device["Device Elapsed"];
     obj["mhash_average"] = device["MHS av"];
-    obj["mhash_current"] = device["MHS 5s"];
+    obj["mhash_current"] = findMhashCurrent(device);
     obj["accepted"] = device["Accepted"];
     obj["rejected"] = device["Rejected"];
     obj["hardware_errors"] = device["Hardware Errors"];
